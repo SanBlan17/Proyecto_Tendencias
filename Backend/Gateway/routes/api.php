@@ -17,40 +17,52 @@ use App\Http\Controllers\BarberController;
 |
 */
 
-// ==================== Rutas de Autenticación (Sin Protección) ====================
+
 
 Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
 Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
 
 
-// ==================== Rutas Protegidas (Requieren JWT Token) ====================
-Route::middleware('auth:api')->group(function () {
-    
-    // ==================== Rutas de Autenticación (Con Protección) ====================
-    
-    Route::post('/verify', [AuthController::class, 'verify'])->name('auth.verify');
-    Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
-    Route::get('/me', [AuthController::class, 'me'])->name('auth.me');
-    
-    
-    // ==================== Rutas de Citas ====================
-    Route::prefix('appointments')->group(function () {
-    Route::get('/', [AppointmentController::class, 'index']);
-    Route::post('/', [AppointmentController::class, 'store']);
-    Route::get('/{id}', [AppointmentController::class, 'show']);
-    Route::put('/{id}', [AppointmentController::class, 'update']);
-    Route::delete('/{id}', [AppointmentController::class, 'destroy']);
-   
-    // ==================== Rutas de Barberos/Servicios ====================
-    
-    Route::get('/', [BarberController::class, 'index']);
-    Route::get('/{id}', [BarberController::class, 'show']);
-    Route::post('/', [BarberController::class, 'store']);
-    Route::put('/{id}', [BarberController::class, 'update']);
-    Route::delete('/{id}', [BarberController::class, 'destroy']);
 
-    });
+Route::middleware('auth:api', 'role:ADMIN')->group(function () {
+    Route::get('/appointments_index_admin', [AppointmentController::class, 'index_admin']);
+    Route::delete('/appointments_destroy/{id}', [AppointmentController::class, 'destroy']);
 
 });
+
+Route::middleware('auth:api', 'role:BARBERO')->group(function () {
+    Route::get('/appointments_index_barbero', [AppointmentController::class, 'index_barber']);
+});
+
+Route::middleware('auth:api', 'role:CLIENTE')->group(function () {
+    Route::get('/appointments_index_cliente', [AppointmentController::class, 'index_client']);
+    Route::post('/appointments_store_cliente', [AppointmentController::class, 'store_client']);
+    Route::post('/appointments_cancel_cliente/{id}', [AppointmentController::class, 'cancel_appointment_client']);
+});
+
+    
+    
+
+
+    // Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
+    
+    
+    // Route::get('/appointments', [AppointmentController::class, 'index']);
+    // Route::post('/appointments', [AppointmentController::class, 'store']);
+    // Route::get('/appointments/{id}', [AppointmentController::class, 'show']);
+    // Route::put('/appointments/{id}', [AppointmentController::class, 'update']);
+    
+   
+    
+    
+    // Route::get('/barbers', [BarberController::class, 'index']);
+    // Route::get('/barbers/{id}', [BarberController::class, 'show']);
+    // Route::post('/barbers', [BarberController::class, 'store']);
+    // Route::put('/barbers/{id}', [BarberController::class, 'update']);
+    // Route::delete('/barbers/{id}', [BarberController::class, 'destroy']);
+
+   
+
+
 
 

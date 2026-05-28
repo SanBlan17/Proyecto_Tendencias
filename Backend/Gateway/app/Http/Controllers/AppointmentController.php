@@ -5,156 +5,81 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Auth;
 
 class AppointmentController extends Controller
 {
     /**
      * Obtener todas las citas
      */
-    public function index(Request $request)
+
+    protected $apiUrl;
+    protected $apiKey;
+
+    public function __construct()
     {
-        try {
-            $response = Http::withHeaders([
-                'X-API-Key' => config('services.internal_api_key'),
-                'Authorization' => 'Bearer ' . $request->bearerToken(),
-                'Content-Type' => 'application/json'
-            ])->get(config('services.appointment_service_url') . '/api/appointments');
-
-            if ($response->failed()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Failed to fetch appointments'
-                ], $response->status());
-            }
-
-            return response()->json($response->json(), $response->status());
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'An error occurred',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        $this->apiUrl = env('MICROSERVICE_APPOINTMENTS_SERVICES');
+        $this->apiKey = env('API_KEY');
     }
+
+    public function index_client()
+    {
+        $id = Auth::id();
+        $url = $this->apiUrl . '/index_client/'. $id;
+        $response = Http::withHeaders(['X-API-Key' => $this->apiKey])->get($url);
+        return $response->json();
+    }
+
+    public function index_barber()
+    {
+        $id = Auth::id();
+        $url = $this->apiUrl . '/index_barber/'. $id;
+        $response = Http::withHeaders(['X-API-Key' => $this->apiKey])->get($url);
+        return $response->json();
+    }
+
+    public function index_admin()
+    {
+        $url = $this->apiUrl . '/index_admin/';
+        $response = Http::withHeaders(['X-API-Key' => $this->apiKey])->get($url);
+        return $response->json();
+    }
+
 
     /**
      * Crear una nueva cita
      */
-    public function store(Request $request)
+    public function store_client(Request $request)
     {
-        try {
-            $response = Http::withHeaders([
-                'X-API-Key' => config('services.internal_api_key'),
-                'Authorization' => 'Bearer ' . $request->bearerToken(),
-                'Content-Type' => 'application/json'
-            ])->post(config('services.appointment_service_url') . '/api/appointments', $request->all());
-
-            if ($response->failed()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Failed to create appointment'
-                ], $response->status());
-            }
-
-            return response()->json($response->json(), $response->status());
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'An error occurred',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        $id = Auth::id();
+        $url = $this->apiUrl . '/store_client/'. $id;
+        $response = Http::withHeaders(['X-API-Key' => $this->apiKey])->post($url, $request->all());
+        return $response->json();
     }
 
     /**
      * Obtener una cita específica
      */
-    public function show(Request $request, $id)
-    {
-        try {
-            $response = Http::withHeaders([
-                'X-API-Key' => config('services.internal_api_key'),
-                'Authorization' => 'Bearer ' . $request->bearerToken(),
-                'Content-Type' => 'application/json'
-            ])->get(config('services.appointment_service_url') . '/api/appointments/' . $id);
-
-            if ($response->failed()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Appointment not found'
-                ], $response->status());
-            }
-
-            return response()->json($response->json(), $response->status());
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'An error occurred',
-                'error' => $e->getMessage()
-            ], 500);
-        }
-    }
-
-    /**
-     * Actualizar una cita
-     */
-    public function update(Request $request, $id)
-    {
-        try {
-            $response = Http::withHeaders([
-                'X-API-Key' => config('services.internal_api_key'),
-                'Authorization' => 'Bearer ' . $request->bearerToken(),
-                'Content-Type' => 'application/json'
-            ])->put(config('services.appointment_service_url') . '/api/appointments/' . $id, $request->all());
-
-            if ($response->failed()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Failed to update appointment'
-                ], $response->status());
-            }
-
-            return response()->json($response->json(), $response->status());
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'An error occurred',
-                'error' => $e->getMessage()
-            ], 500);
-        }
-    }
+    
 
     /**
      * Eliminar una cita
      */
     public function destroy(Request $request, $id)
     {
-        try {
-            $response = Http::withHeaders([
-                'X-API-Key' => config('services.internal_api_key'),
-                'Authorization' => 'Bearer ' . $request->bearerToken(),
-                'Content-Type' => 'application/json'
-            ])->delete(config('services.appointment_service_url') . '/api/appointments/' . $id);
+        $url = $this->apiUrl . '/delete_appointment/'. $id;
+        $response = Http::withHeaders(['X-API-Key' => $this->apiKey])->delete($url);
+        return $response->json();
+    }
 
-            if ($response->failed()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Failed to delete appointment'
-                ], $response->status());
-            }
+    public function cancel_appointment_client($id)
+    {
+        $userId = Auth::id();
 
-            return response()->json($response->json(), $response->status());
+        $response = Http::withHeaders([
+            'X-API-Key' => $this->apiKey
+        ])->put($this->apiUrl . "/cancel_client/{$id}/{$userId}");
 
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'An error occurred',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        return $response->json();
     }
 }
