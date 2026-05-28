@@ -16,7 +16,7 @@ class ValidateServiceKey
     public function handle(Request $request, Closure $next): Response
     {
         $apiKey = $request->header('X-API-Key');
-        $expectedKey = config('services.internal_api_key');
+        $expectedKey = env('API_KEY');
 
         if (!$apiKey || $apiKey !== $expectedKey) {
             return response()->json([

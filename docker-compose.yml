@@ -9,6 +9,7 @@ services:
     volumes:
       - ./Frontend:/app
       - /app/node_modules
+    working_dir: /var/www/html/
     networks:
       barber-network:
             ipv4_address: 192.168.40.2
@@ -22,6 +23,7 @@ services:
       - "8000:8000"
     volumes:
       - ./Backend/Gateway:/app
+    working_dir: /var/www/html/
     depends_on:
       - postgres
     networks:
@@ -37,6 +39,7 @@ services:
       - "8001:8000"
     volumes:
       - ./Backend/Appointment_Service:/app
+    working_dir: /var/www/html/
     depends_on:
       - postgres
     networks:
@@ -56,6 +59,7 @@ services:
       - ./Backend/Barber_Service:/app
     depends_on:
       - postgres
+    working_dir: /var/www/html/
     networks:
       barber-network:
             ipv4_address: 192.168.40.4
@@ -70,6 +74,7 @@ services:
       - "5000:5000"
     volumes:
       - ./Backend/Notification:/app
+    working_dir: /var/www/html/
     networks:
       barber-network:
             ipv4_address: 192.168.40.5
@@ -77,7 +82,6 @@ services:
   postgres:
     image: postgres:16
     container_name: postgres
-    restart: always
 
     environment:
       POSTGRES_USER: postgres

@@ -2,9 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\AppointmentController;
-use App\Http\Controllers\Api\BarberController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\BarberController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,37 +13,44 @@ use App\Http\Controllers\Api\BarberController;
 |
 | Este es el punto de entrada centralizado para todos los microservicios.
 | Aquí se manejan las peticiones del frontend y se enrutan a los servicios correspondientes.
+| Autenticación: JWT (PHPOpenSourceSaver/JWTAuth)
 |
 */
 
-// ==================== Rutas de Autenticación ====================
-Route::prefix('auth')->group(function () {
-    Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
-    Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
-    Route::post('/verify', [AuthController::class, 'verify'])->middleware('auth:sanctum');
-    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-});
+// ==================== Rutas de Autenticación (Sin Protección) ====================
 
-// ==================== Rutas Protegidas ====================
-Route::middleware('auth:sanctum')->group(function () {
+Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
+Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
+
+
+// ==================== Rutas Protegidas (Requieren JWT Token) ====================
+Route::middleware('auth:api')->group(function () {
+    
+    // ==================== Rutas de Autenticación (Con Protección) ====================
+    
+    Route::post('/verify', [AuthController::class, 'verify'])->name('auth.verify');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
+    Route::get('/me', [AuthController::class, 'me'])->name('auth.me');
+    
     
     // ==================== Rutas de Citas ====================
     Route::prefix('appointments')->group(function () {
-        Route::get('/', [AppointmentController::class, 'index']);
-        Route::post('/', [AppointmentController::class, 'store']);
-        Route::get('/{id}', [AppointmentController::class, 'show']);
-        Route::put('/{id}', [AppointmentController::class, 'update']);
-        Route::delete('/{id}', [AppointmentController::class, 'destroy']);
-    });
-
+    Route::get('/', [AppointmentController::class, 'index']);
+    Route::post('/', [AppointmentController::class, 'store']);
+    Route::get('/{id}', [AppointmentController::class, 'show']);
+    Route::put('/{id}', [AppointmentController::class, 'update']);
+    Route::delete('/{id}', [AppointmentController::class, 'destroy']);
+   
     // ==================== Rutas de Barberos/Servicios ====================
-    Route::prefix('barbers')->group(function () {
-        Route::get('/', [BarberController::class, 'index']);
-        Route::post('/', [BarberController::class, 'store']);
-        Route::get('/{id}', [BarberController::class, 'show']);
-        Route::put('/{id}', [BarberController::class, 'update']);
-        Route::delete('/{id}', [BarberController::class, 'destroy']);
+    
+    Route::get('/', [BarberController::class, 'index']);
+    Route::get('/{id}', [BarberController::class, 'show']);
+    Route::post('/', [BarberController::class, 'store']);
+    Route::put('/{id}', [BarberController::class, 'update']);
+    Route::delete('/{id}', [BarberController::class, 'destroy']);
+
     });
 
 });
+
 

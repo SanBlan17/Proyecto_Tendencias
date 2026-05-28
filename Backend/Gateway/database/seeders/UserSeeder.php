@@ -14,28 +14,43 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        // Crear usuarios de prueba en el Gateway
         User::create([
-            'name' => 'Juan Pérez',
+            'first_name' => 'Juan',
+            'last_name' => 'Pérez',
             'email' => 'juan@example.com',
             'password' => Hash::make('password123'),
-            'phone' => '3001234567',
-            'role_id' => 1,
+            'phone' => '+34 600 123 456',
+            'is_active' => true
         ]);
 
         User::create([
-            'name' => 'María Gómez',
+            'first_name' => 'María',
+            'last_name' => 'García',
             'email' => 'maria@example.com',
             'password' => Hash::make('password123'),
-            'phone' => '3019876543',
-            'role_id' => 2,
+            'phone' => '+34 600 234 567',
+            'is_active' => true
         ]);
 
         User::create([
-            'name' => 'Carlos Ruiz',
+            'first_name' => 'Carlos',
+            'last_name' => 'López',
             'email' => 'carlos@example.com',
             'password' => Hash::make('password123'),
-            'phone' => '3105551122',
-            'role_id' => 2,
+            'phone' => '+34 600 345 678',
+            'is_active' => true
         ]);
+
+        User::create([
+            'first_name' => 'Ana',
+            'last_name' => 'Martínez',
+            'email' => 'ana@example.com',
+            'password' => Hash::make('password123'),
+            'phone' => '+34 600 456 789',
+            'is_active' => true
+        ]);
+
+        $this->command->info('Gateway users seeded successfully!');
     }
 }
