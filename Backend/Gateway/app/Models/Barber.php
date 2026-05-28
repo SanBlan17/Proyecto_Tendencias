@@ -8,6 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Barber extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'user_id',
+        'specialty',
+        'experience_years'
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
