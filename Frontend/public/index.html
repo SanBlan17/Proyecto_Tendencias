@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto Tendencias</title>
+    <link rel="stylesheet" href="../src/assets/css/style.css">
+    <link rel="stylesheet" href="../src/assets/css/auth.css">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <nav class="navbar">
+                <div class="container">
+                    <div class="logo">
+                        <h1>Proyecto Tendencias</h1>
+                    </div>
+                    <ul class="menu">
+                        <li><a href="#home">Inicio</a></li>
+                        <li><a href="#appointments">Citas</a></li>
+                        <li><a href="#services">Servicios</a></li>
+                        <li><a href="#profile">Perfil</a></li>
+                        <li class="user-info">
+                            <span id="userName">Usuario</span>
+                            <button id="logoutBtn" class="btn-logout">Cerrar sesión</button>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <div class="container">
+                <section id="home" class="hero">
+                    <h2>Bienvenido a Proyecto Tendencias</h2>
+                    <p>Sistema de gestión de citas y servicios</p>
+                </section>
+
+                <section id="appointments" class="section">
+                    <h2>Citas</h2>
+                    <div id="appointments-list" class="content-placeholder">
+                        Cargando citas...
+                    </div>
+                </section>
+
+                <section id="services" class="section">
+                    <h2>Servicios</h2>
+                    <div id="services-list" class="content-placeholder">
+                        Cargando servicios...
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 Proyecto Tendencias. Todos los derechos reservados.</p>
+        </footer>
+    </div>
+
+    <script type="module" src="../src/assets/js/auth.js"></script>
+    <script type="module" src="../src/assets/js/main.js"></script>
+</body>
+</html>

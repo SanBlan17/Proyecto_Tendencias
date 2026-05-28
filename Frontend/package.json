@@ -1,0 +1,20 @@
+{
+  "name": "proyecto-tendencias-frontend",
+  "version": "1.0.0",
+  "description": "Frontend para Proyecto Tendencias - Microservicios",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": ["vue", "laravel", "appointment", "barber"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "vite": "^5.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  }
+}

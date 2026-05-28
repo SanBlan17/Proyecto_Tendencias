@@ -1,0 +1,105 @@
+services:
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: ../Dockerfile.node
+    container_name: frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./Frontend:/app
+      - /app/node_modules
+    networks:
+      barber-network:
+            ipv4_address: 192.168.40.2
+
+  gateway:
+    build:
+      context: ./Backend/Gateway
+      dockerfile: ../../Dockerfile
+    container_name: gateway
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./Backend/Gateway:/app
+    depends_on:
+      - postgres
+    networks:
+      - barber-network
+    command: sh -c "composer update && php artisan key:generate && php artisan migrate:refresh && php artisan db:seed && php artisan serve --host=0.0.0.0 --port=8000"
+
+  appointment-service:
+    build:
+      context: ./Backend/Appointment_Service
+      dockerfile: ../../Dockerfile
+    container_name: appointment-service
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./Backend/Appointment_Service:/app
+    depends_on:
+      - postgres
+    networks:
+      barber-network:
+            ipv4_address: 192.168.40.3
+            
+    command: sh -c "composer update && php artisan key:generate && php artisan serve --host=0.0.0.0 --port=8000"
+
+  barber-service:
+    build:
+      context: ./Backend/Barber_Service
+      dockerfile: ../../Dockerfile
+    container_name: barber-service
+    ports:
+      - "8002:8000"
+    volumes:
+      - ./Backend/Barber_Service:/app
+    depends_on:
+      - postgres
+    networks:
+      barber-network:
+            ipv4_address: 192.168.40.4
+    command: sh -c "composer update && php artisan key:generate && php artisan serve --host=0.0.0.0 --port=8000"
+
+  notification-service:
+    build:
+      context: ./Backend/Notification
+      dockerfile: ../../Dockerfile.flask
+    container_name: notification-service
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./Backend/Notification:/app
+    networks:
+      barber-network:
+            ipv4_address: 192.168.40.5
+
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    restart: always
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: barbershop
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+    networks:
+      barber-network:
+            ipv4_address: 192.168.40.6
+
+volumes:
+  postgres-data:
+
+networks:
+  barber-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.40.0/24

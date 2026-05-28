@@ -31,4 +31,21 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Microservicios
+    |--------------------------------------------------------------------------
+    |
+    | Configuración de URLs para los microservicios
+    |
+    */
+
+    'appointment_service_url' => env('APPOINTMENT_SERVICE_URL', 'http://localhost:8001'),
+    'barber_service_url' => env('BARBER_SERVICE_URL', 'http://localhost:8002'),
+
+    /**
+     * Clave API interna para comunicación entre servicios
+     */
+    'internal_api_key' => env('INTERNAL_API_KEY', 'your-internal-api-key-here'),
+
 ];
