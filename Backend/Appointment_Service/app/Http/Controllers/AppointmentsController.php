@@ -22,21 +22,36 @@ class AppointmentsController extends Controller
         return Appointment::all();
     }
 
-    public function storeClient(Request $request, $userId)
+    public function storeClient(Request $request)
     {
-        $appointment = Appointment::create([
-            'user_id' => $userId,
-            'barber_id' => $request->barber_id,
-            'service_id' => $request->service_id,
-            'date' => $request->date,
-            'time' => $request->time,
-            'status' => 'pending'
-        ]);
+        
+        try {
 
-        return response()->json([
-            'message' => 'Cita creada correctamente',
-            'appointment' => $appointment
-        ]);
+            $appointment = Appointment::create([
+                'user_id' => $request->user_id,
+                'barber_id' => $request->barber_id,
+                'service_id' => $request->service_id,
+                'appointment_date' => $request->appointment_date,
+                'start_time' => $request->start_time,
+                'end_time' => $request->end_time,
+                'status' => $request->status,
+                'notes' => $request->notes,
+            ]);
+
+            return response()->json([
+                'message' => 'Cita creada correctamente',
+                'appointment' => $appointment
+            ]);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 500);
+
+        }
     }
 
     public function cancelClient($id, $userId)
@@ -67,8 +82,8 @@ class AppointmentsController extends Controller
 
     public function destroy($id)
     {
-        $transaction = Transaction::find($id);
-        $transaction->delete();
+        $appointment = Appointment::find($id);
+        $appointment->delete();
         return response()->json(['message' => 'Cita eliminada']);
     }
 

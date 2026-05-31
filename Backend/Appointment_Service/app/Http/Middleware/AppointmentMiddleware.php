@@ -15,6 +15,7 @@ class AppointmentMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        
         $ApiKeyReceived = $request->header("X-API-key");
         $ApiKey = env("API_KEY");
         if ($ApiKeyReceived !== $ApiKey ){

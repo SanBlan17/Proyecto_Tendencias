@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Service;
+use Carbon\Carbon;
 
 class AppointmentController extends Controller
 {
@@ -32,7 +34,7 @@ class AppointmentController extends Controller
 
     public function index_barber()
     {
-        $id = Auth::id();
+        $id = auth()->user()->barber->id;
         $url = $this->apiUrl . '/index_barber/'. $id;
         $response = Http::withHeaders(['X-API-Key' => $this->apiKey])->get($url);
         return $response->json();
@@ -51,9 +53,24 @@ class AppointmentController extends Controller
      */
     public function store_client(Request $request)
     {
-        $id = Auth::id();
-        $url = $this->apiUrl . '/store_client/'. $id;
-        $response = Http::withHeaders(['X-API-Key' => $this->apiKey])->post($url, $request->all());
+        $service = Service::findOrFail($request->service_id);
+
+        $endTime = Carbon::parse($request->start_time)
+            ->addMinutes($service->duration_minutes);
+        
+        $data = [
+            'user_id' => auth()->id(),
+            'barber_id' => $request->barber_id,
+            'service_id' => $request->service_id,
+            'appointment_date' => $request->appointment_date,
+            'start_time' => $request->start_time,
+            'end_time' => $endTime->format('H:i:s'),
+            'status' => 'CONFIRMED',
+            'notes' => $request->notes
+        ];
+
+        $url = $this->apiUrl . '/store_client/';
+        $response = Http::withHeaders(['X-API-Key' => $this->apiKey])->post($url, $data);
         return $response->json();
     }
 

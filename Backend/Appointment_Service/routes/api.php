@@ -17,7 +17,7 @@ use App\Http\Controllers\AppointmentsController;
 
 Route::middleware(['AppointmentMiddleware'])->group(function () {
     Route::get('/index_client/{userId}', [AppointmentsController::class, 'indexClient']);
-    Route::post('/store_client/{userId}', [AppointmentsController::class, 'storeClient']);
+    Route::post('/store_client', [AppointmentsController::class, 'storeClient']);
     Route::put('/cancel_client/{id}/{userId}', [AppointmentsController::class, 'cancelClient']);
     Route::get('/index_barber/{barberId}', [AppointmentsController::class, 'indexBarber']);
     Route::get('/index_admin', [AppointmentsController::class, 'indexAdmin']);
