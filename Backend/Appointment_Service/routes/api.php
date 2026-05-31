@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\AppointmentsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,11 +15,11 @@ use App\Http\Controllers\AppointmentController;
 |
 */
 
-Route::middleware(['TransactionMiddleware'])->group(function () {
-    Route::get('/index_client/{userId}', [AppointmentController::class, 'indexClient']);
-    Route::post('/store_client/{userId}', [AppointmentController::class, 'storeClient']);
-    Route::put('/cancel_client/{id}/{userId}', [AppointmentController::class, 'cancelClient']);
-    Route::get('/index_barber/{barberId}', [AppointmentController::class, 'indexBarber']);
-    Route::get('/index_admin', [AppointmentController::class, 'indexAdmin']);
-    Route::delete('/delete_appointment/{id}', [AppointmentController::class, 'destroy']);
+Route::middleware(['AppointmentMiddleware'])->group(function () {
+    Route::get('/index_client/{userId}', [AppointmentsController::class, 'indexClient']);
+    Route::post('/store_client/{userId}', [AppointmentsController::class, 'storeClient']);
+    Route::put('/cancel_client/{id}/{userId}', [AppointmentsController::class, 'cancelClient']);
+    Route::get('/index_barber/{barberId}', [AppointmentsController::class, 'indexBarber']);
+    Route::get('/index_admin', [AppointmentsController::class, 'indexAdmin']);
+    Route::delete('/delete_appointment/{id}', [AppointmentsController::class, 'destroy']);
 });

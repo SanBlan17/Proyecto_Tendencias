@@ -64,4 +64,12 @@ class AppointmentsController extends Controller
             'appointment' => $appointment
         ]);
     }
+
+    public function destroy($id)
+    {
+        $transaction = Transaction::find($id);
+        $transaction->delete();
+        return response()->json(['message' => 'Cita eliminada']);
+    }
+
 }

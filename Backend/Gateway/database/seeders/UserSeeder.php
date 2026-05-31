@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password123'),
             'phone' => '+34 600 123 456',
             'is_active' => true,
-            'role' => 1 // Admin
+            'role_id' => 1 // Admin
         ]);
 
         User::create([
@@ -32,7 +32,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password123'),
             'phone' => '+34 600 234 567',
             'is_active' => true,
-            'role' => 2 // Barber
+            'role_id' => 2 // Barber
         ]);
 
         User::create([
@@ -42,7 +42,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password123'),
             'phone' => '+34 600 345 678',
             'is_active' => true,
-            'role' => 2 // Barber
+            'role_id' => 2 // Barber
         ]);
 
         User::create([
@@ -52,7 +52,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password123'),
             'phone' => '+34 600 456 789',
             'is_active' => true,
-            'role' => 3 // Client
+            'role_id' => 3 // Client
         ]);
 
         $this->command->info('Gateway users seeded successfully!');

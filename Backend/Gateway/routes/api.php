@@ -21,8 +21,7 @@ use App\Http\Controllers\BarberController;
 
 Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
 Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
-
-
+Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
 Route::middleware('auth:api', 'role:ADMIN')->group(function () {
     Route::get('/appointments_index_admin', [AppointmentController::class, 'index_admin']);
@@ -44,7 +43,7 @@ Route::middleware('auth:api', 'role:CLIENTE')->group(function () {
     
 
 
-    // Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
+    
     
     
     // Route::get('/appointments', [AppointmentController::class, 'index']);
