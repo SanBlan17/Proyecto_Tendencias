@@ -22,4 +22,5 @@ Route::middleware(['AppointmentMiddleware'])->group(function () {
     Route::get('/index_barber/{barberId}', [AppointmentsController::class, 'indexBarber']);
     Route::get('/index_admin', [AppointmentsController::class, 'indexAdmin']);
     Route::delete('/delete_appointment/{id}', [AppointmentsController::class, 'destroy']);
+    Route::put('/confirm_barber/{barberId}/{appointmentId}', [AppointmentsController::class, 'confirmBarber']);
 });

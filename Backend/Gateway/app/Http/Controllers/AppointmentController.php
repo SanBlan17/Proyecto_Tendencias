@@ -65,7 +65,7 @@ class AppointmentController extends Controller
             'appointment_date' => $request->appointment_date,
             'start_time' => $request->start_time,
             'end_time' => $endTime->format('H:i:s'),
-            'status' => 'CONFIRMED',
+            'status' => 'PENDING',
             'notes' => $request->notes
         ];
 
@@ -96,6 +96,17 @@ class AppointmentController extends Controller
         $response = Http::withHeaders([
             'X-API-Key' => $this->apiKey
         ])->put($this->apiUrl . "/cancel_client/{$id}/{$userId}");
+
+        return $response->json();
+    }
+
+    public function confirmed_appointment_barbero($id_appointment)
+    {
+        $barberId = auth()->user()->barber->id;
+
+        $response = Http::withHeaders([
+            'X-API-Key' => $this->apiKey
+        ])->put($this->apiUrl . "/confirm_barber/{$barberId}/{$id_appointment}");
 
         return $response->json();
     }

@@ -33,7 +33,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => bcrypt($request->password),
-            'role_id' => 3
+            'role_id' => $request->role_id
         ]);
 
         

@@ -31,6 +31,7 @@ Route::middleware('auth:api', 'role:ADMIN')->group(function () {
 
 Route::middleware('auth:api', 'role:BARBERO')->group(function () {
     Route::get('/appointments_index_barbero', [AppointmentController::class, 'index_barber']);
+    Route::put('/confirmed_appointment_barbero/{id}', [AppointmentController::class, 'confirmed_appointment_barbero']);
 });
 
 Route::middleware('auth:api', 'role:CLIENTE')->group(function () {

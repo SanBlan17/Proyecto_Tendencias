@@ -64,14 +64,14 @@ class AppointmentsController extends Controller
             return response()->json(['message' => 'Cita no encontrada'], 404);
         }
 
-        if ($appointment->status !== 'pending') {
+        if ($appointment->status !== 'PENDING') {
             return response()->json([
                 'message' => 'No puedes cancelar una cita ya procesada'
             ], 400);
         }
 
         $appointment->update([
-            'status' => 'cancelled'
+            'status' => 'CANCELLED'
         ]);
 
         return response()->json([
@@ -85,6 +85,24 @@ class AppointmentsController extends Controller
         $appointment = Appointment::find($id);
         $appointment->delete();
         return response()->json(['message' => 'Cita eliminada']);
+    }
+
+    public function confirmBarber($barberId, $appointmentId)
+    {
+        $appointment = Appointment::where('id', $appointmentId)->where('barber_id', $barberId)->first();
+
+        if (!$appointment) {
+            return response()->json(['message' => 'Cita no encontrada'], 404);
+        }
+
+        $appointment->update([
+            'status' => 'CONFIRMED'
+        ]);
+
+        return response()->json([
+            'message' => 'Cita confirmada correctamente',
+            'appointment' => $appointment
+        ]);
     }
 
 }
