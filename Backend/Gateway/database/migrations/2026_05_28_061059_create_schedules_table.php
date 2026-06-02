@@ -18,7 +18,7 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnDelete();
 
-            $table->integer('day_of_week');
+            $table->date('work_date');
 
             $table->time('start_time');
 

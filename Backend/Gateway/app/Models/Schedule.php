@@ -11,7 +11,7 @@ class Schedule extends Model
 
     protected $fillable = [
         'barber_id',
-        'day_of_week',
+        'work_date',
         'start_time',
         'end_time',
         'is_available'

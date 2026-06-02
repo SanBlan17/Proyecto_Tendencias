@@ -4,15 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class ServiceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
+    protected $apiUrl;
+    protected $apiKey;
+
+    public function __construct()
+    {
+        $this->apiUrl = env('MICROSERVICE_SERVICE_CONTROL');
+        $this->apiKey = env('API_KEY');
+    }
+
     public function index()
     {
-        //
+        $url = $this->apiUrl . '/services';
+        $response = Http::withHeaders(['X-API-Key' => $this->apiKey])->get($url);
+        return $response->json();
     }
 
     /**
@@ -28,7 +38,9 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $url = $this->apiUrl . '/services/';
+        $response = Http::withHeaders(['X-API-Key' => $this->apiKey])->post($url, $request->all());
+        return $response->json();
     }
 
     /**
@@ -50,16 +62,20 @@ class ServiceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Service $service)
+    public function update(Request $request, int $id)
     {
-        //
+        $url = $this->apiUrl . '/services/' . $id;
+        $response = Http::withHeaders(['X-API-Key' => $this->apiKey])->put($url, $request->all());
+        return $response->json();
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Service $service)
+    public function destroy(int $id)
     {
-        //
+        $url = $this->apiUrl . '/services/' . $id;
+        $response = Http::withHeaders(['X-API-Key' => $this->apiKey])->delete($url);
+        return $response->json();
     }
 }

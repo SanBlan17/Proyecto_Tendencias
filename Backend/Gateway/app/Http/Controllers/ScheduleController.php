@@ -28,7 +28,28 @@ class ScheduleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $exists = Schedule::where('barber_id', $request->barber_id)
+            ->where('work_date', $request->work_date)
+            ->exists();
+
+        if ($exists) {
+            return response()->json([
+                'message' => 'Ya existe un horario para esta fecha'
+            ], 409);
+        }
+
+        $schedule = Schedule::create([
+            'barber_id' => $request->barber_id,
+            'work_date' => $request->work_date,
+            'start_time' => $request->start_time,
+            'end_time' => $request->end_time,
+            'is_available' => true
+        ]);
+
+        return response()->json([
+            'message' => 'Horario creado correctamente',
+            'schedule' => $schedule
+        ], 201);
     }
 
     /**
@@ -61,5 +82,20 @@ class ScheduleController extends Controller
     public function destroy(Schedule $schedule)
     {
         //
+    }
+
+    public function getScheduleByDate($barberId, $date)
+    {
+        $schedule = Schedule::where('barber_id', $barberId)
+            ->where('work_date', $date)
+            ->first();
+
+        if (!$schedule) {
+            return response()->json([
+                'message' => 'El barbero no tiene horario para esa fecha'
+            ], 404);
+        }
+
+        return response()->json($schedule);
     }
 }

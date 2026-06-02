@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Service;
 use Carbon\Carbon;
+use App\Services\AppointmentValidationService;
 
 class AppointmentController extends Controller
 {
@@ -55,8 +56,23 @@ class AppointmentController extends Controller
     {
         $service = Service::findOrFail($request->service_id);
 
-        $endTime = Carbon::parse($request->start_time)
-            ->addMinutes($service->duration_minutes);
+        $validator = new AppointmentValidationService();
+
+        $result = $validator->validate(
+            $request->barber_id,
+            $request->appointment_date,
+            $request->start_time,
+            $request->service_id
+        );
+        if (!$result['success']) {
+
+            return response()->json([
+                'message' => $result['message']
+            ], 422);
+        }
+
+        // $endTime = Carbon::parse($request->start_time)
+        //     ->addMinutes($service->duration_minutes);
         
         $data = [
             'user_id' => auth()->id(),
@@ -64,7 +80,7 @@ class AppointmentController extends Controller
             'service_id' => $request->service_id,
             'appointment_date' => $request->appointment_date,
             'start_time' => $request->start_time,
-            'end_time' => $endTime->format('H:i:s'),
+            'end_time' => $result['end_time'],
             'status' => 'PENDING',
             'notes' => $request->notes
         ];

@@ -6,6 +6,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\BarberController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\AvailabilityController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,9 +37,22 @@ Route::middleware('auth:api', 'role:ADMIN')->group(function () {
     Route::post('/users', [UserController::class, 'store']);
     Route::put('/users/{id}', [UserController::class, 'update']);
     Route::delete('/users/{id}', [UserController::class, 'destroy']);
+
     // Rutas para administración de barberos
     Route::get('/barbers', [BarberController::class, 'index']);
     Route::put('/barbers/{id}', [BarberController::class, 'update']);
+
+    // Rutas para administración de servicios
+    Route::get('/services', [ServiceController::class, 'index']);
+    Route::post('/services', [ServiceController::class, 'store']);
+    Route::put('/services/{id}', [ServiceController::class, 'update']);
+    Route::delete('/services/{id}', [ServiceController::class, 'destroy']);
+
+    // Rutas para administración de horarios
+    Route::post('/schedules', [ScheduleController::class, 'store']);
+    Route::get('/schedules/barber/{barberId}/date/{date}',[ScheduleController::class, 'getScheduleByDate']);
+    
+    
 
 });
 
@@ -52,7 +68,7 @@ Route::middleware('auth:api', 'role:CLIENTE')->group(function () {
 });
 
     
-    
+Route::get('/barbers/{barberId}/available-slots',[AvailabilityController::class, 'getAvailableSlots']);    
 
 
     

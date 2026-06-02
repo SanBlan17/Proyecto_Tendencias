@@ -49,15 +49,15 @@ services:
             
     command: sh -c "composer update && php artisan key:generate && php artisan serve --host=0.0.0.0 --port=8000"
 
-  barber-service:
+  service-control:
     build:
-      context: ./Backend/Barber_Service
+      context: ./Backend/Services_Control
       dockerfile: ../../Dockerfile
-    container_name: barber-service
+    container_name: service-control
     ports:
       - "8002:8000"
     volumes:
-      - ./Backend/Barber_Service:/app
+      - ./Backend/Services_Control:/app
     depends_on:
       - postgres
     working_dir: /var/www/html/
