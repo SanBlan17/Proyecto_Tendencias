@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\BarberController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,8 +25,18 @@ Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
 Route::middleware('auth:api', 'role:ADMIN')->group(function () {
+    // Rutas para administración de citas
     Route::get('/appointments_index_admin', [AppointmentController::class, 'index_admin']);
     Route::delete('/appointments_destroy/{id}', [AppointmentController::class, 'destroy']);
+    // Rutas para administración de usuarios
+    Route::get('/users', [UserController::class, 'index']);
+    Route::get('/users/{id}', [UserController::class, 'show']);
+    Route::post('/users', [UserController::class, 'store']);
+    Route::put('/users/{id}', [UserController::class, 'update']);
+    Route::delete('/users/{id}', [UserController::class, 'destroy']);
+    // Rutas para administración de barberos
+    Route::get('/barbers', [BarberController::class, 'index']);
+    Route::put('/barbers/{id}', [BarberController::class, 'update']);
 
 });
 

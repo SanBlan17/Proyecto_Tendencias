@@ -12,7 +12,9 @@ class BarberController extends Controller
      */
     public function index()
     {
-        //
+        $barbers = Barber::with('user')->get();
+
+        return response()->json($barbers);
     }
 
     /**
@@ -50,9 +52,25 @@ class BarberController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Barber $barber)
+    public function update(Request $request, string $id)
     {
-        //
+        $barber = Barber::find($id);
+
+        if (!$barber) {
+            return response()->json([
+                'message' => 'Barbero no encontrado'
+            ], 404);
+        }
+
+        $barber->update([
+            'specialty' => $request->specialty,
+            'experience_years' => $request->experience_years
+        ]);
+
+        return response()->json([
+            'message' => 'Barbero actualizado correctamente',
+            'barber' => $barber
+        ]);
     }
 
     /**
