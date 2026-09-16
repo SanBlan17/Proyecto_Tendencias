@@ -13,7 +13,7 @@ services:
     networks:
       barber-network:
             ipv4_address: 192.168.40.2
-
+  #Hola para probar
   gateway:
     build:
       context: ./Backend/Gateway
